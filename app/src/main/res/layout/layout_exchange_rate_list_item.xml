@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:gravity="center_vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:background="?attr/selectableItemBackground"
+    >
+
+    <TextView
+        android:id="@+id/label_exchange_rate_name"
+        style="@style/TextAppearance.AppTheme.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="US Dollar"
+        />
+
+    <TextView
+        android:id="@+id/label_exchange_rate_amount"
+        style="@style/TextAppearance.AppTheme.Body2"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        tools:text="46"
+        />
+
+</merge>

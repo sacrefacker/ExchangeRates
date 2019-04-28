@@ -1,0 +1,22 @@
+<resources>
+    
+    <string name="app_name">Exchange rates</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!--Dialogs-->
+    <string name="dialog_button_ok">OK</string>
+    <!-- Exit app dialog -->
+    <string name="message_exit">Are you sure you want to exit the app?</string>
+    <string name="button_exit">Exit</string>
+    <string name="button_stay">Stay</string>
+
+    <!-- Notification channels -->
+    <string name="notification_category_caption_other">Other</string>
+    <string name="notification_category_other">OTHER</string>
+
+    <!-- Exchange rates -->
+    <string name="title_loading_error">Error</string>
+    <string name="message_loading_error">Error loading exchange rates data</string>
+
+</resources>

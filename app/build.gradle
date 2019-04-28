@@ -1,0 +1,80 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+
+    final APPLICATION_ID = 'com.maloshpal.exchangerates'
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+
+        applicationId APPLICATION_ID
+
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
+
+    // Android Annotations
+    final ANDROID_ANNOTATIONS_VERSION = rootProject.ext.ANDROID_ANNOTATIONS_VERSION
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    kapt "org.androidannotations:androidannotations:$ANDROID_ANNOTATIONS_VERSION"
+    implementation "org.androidannotations:androidannotations-api:$ANDROID_ANNOTATIONS_VERSION"
+
+    // Android Support
+    // "compile" instead of "implementation" to allow proper compilation of app module
+    final ANDROID_SUPPORT_VERSION = rootProject.ext.ANDROID_SUPPORT_VERSION
+    implementation "com.android.support:appcompat-v7:$ANDROID_SUPPORT_VERSION"
+    implementation "com.android.support:design:$ANDROID_SUPPORT_VERSION"
+    implementation "com.android.support:recyclerview-v7:$ANDROID_SUPPORT_VERSION"
+
+    // Immutables
+    final IMMUTABLES_VERSION = rootProject.ext.IMMUTABLES_VERSION
+    kapt "org.immutables:value:$IMMUTABLES_VERSION"
+    compileOnly "org.immutables:value:$IMMUTABLES_VERSION:annotations"
+    compileOnly "org.immutables:serial:$IMMUTABLES_VERSION"
+
+    // Dagger
+    final DAGGER_VERSION = rootProject.ext.DAGGER_VERSION
+    kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    implementation "com.google.dagger:dagger:$DAGGER_VERSION"
+
+    // Moxy
+    final MOXY_VERSION = rootProject.ext.MOXY_VERSION
+    kapt "com.arello-mobile:moxy-compiler:$MOXY_VERSION"
+    implementation "com.arello-mobile:moxy:$MOXY_VERSION"
+    implementation "com.arello-mobile:moxy-android:$MOXY_VERSION"
+    implementation "com.arello-mobile:moxy-app-compat:$MOXY_VERSION"
+
+    // testImplementation 'junit:junit:4.12'
+    // androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    // androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}

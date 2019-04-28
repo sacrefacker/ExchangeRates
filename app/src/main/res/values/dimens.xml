@@ -1,0 +1,6 @@
+<resources>
+
+    <dimen name="exchange_rate_view_height">72dp</dimen>
+    <dimen name="exchange_rate_view_padding">16dp</dimen>
+
+</resources>
