@@ -1,6 +1,10 @@
 <resources>
 
+    <dimen name="common_padding">32dp</dimen>
+
     <dimen name="exchange_rate_view_height">72dp</dimen>
     <dimen name="exchange_rate_view_padding">16dp</dimen>
+
+    <dimen name="divider_height">1dp</dimen>
 
 </resources>

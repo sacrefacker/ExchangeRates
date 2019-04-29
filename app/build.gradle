@@ -44,8 +44,8 @@ dependencies {
 
     // Android Annotations
     final ANDROID_ANNOTATIONS_VERSION = rootProject.ext.ANDROID_ANNOTATIONS_VERSION
-    implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation "com.android.support:support-v4:28.0.0"
+    implementation "com.android.support:recyclerview-v7:28.0.0"
     kapt "org.androidannotations:androidannotations:$ANDROID_ANNOTATIONS_VERSION"
     implementation "org.androidannotations:androidannotations-api:$ANDROID_ANNOTATIONS_VERSION"
 
@@ -73,6 +73,16 @@ dependencies {
     implementation "com.arello-mobile:moxy:$MOXY_VERSION"
     implementation "com.arello-mobile:moxy-android:$MOXY_VERSION"
     implementation "com.arello-mobile:moxy-app-compat:$MOXY_VERSION"
+
+    // Rx Java
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
+
+    // Network
+    implementation "com.squareup.retrofit2:retrofit:2.3.0"
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    implementation "com.squareup.retrofit2:converter-gson:2.3.0"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
 
     // testImplementation 'junit:junit:4.12'
     // androidTestImplementation 'com.android.support.test:runner:1.0.1'

@@ -7,10 +7,8 @@ import com.maloshpal.exchangerates.R
 import com.maloshpal.exchangerates.ui.activity.base.BaseAppActivity
 
 import org.androidannotations.annotations.EActivity
-import org.androidannotations.annotations.OptionsMenu
 
 @EActivity(R.layout.activity_main)
-@OptionsMenu(R.menu.menu_main)
 open class MainActivity : BaseAppActivity() {
 
 // MARK: - Companion

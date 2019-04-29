@@ -2,8 +2,6 @@
     
     <string name="app_name">Exchange rates</string>
 
-    <string name="action_settings">Settings</string>
-
     <!--Dialogs-->
     <string name="dialog_button_ok">OK</string>
     <!-- Exit app dialog -->
@@ -18,5 +16,7 @@
     <!-- Exchange rates -->
     <string name="title_loading_error">Error</string>
     <string name="message_loading_error">Error loading exchange rates data</string>
+
+    <string name="label_amount">%1$d.%2$d</string>
 
 </resources>

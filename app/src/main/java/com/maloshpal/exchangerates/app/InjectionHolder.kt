@@ -3,8 +3,8 @@ package com.maloshpal.exchangerates.app
 import com.maloshpal.exchangerates.app.dagger.components.BootstrapComponent
 import kotlin.properties.Delegates.notNull
 
-class InjectionHolder private constructor()
-{
+class InjectionHolder private constructor() {
+
 // MARK: - Properties
 
     var bootstrapComponent: BootstrapComponent by notNull()

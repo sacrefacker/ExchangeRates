@@ -5,6 +5,9 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     >
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -22,7 +25,13 @@
             <com.maloshpal.exchangerates.ui.view.exchangerates.ExchangeRateEditableView_
                 android:id="@+id/widget_main_exchange_rate"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/exchange_rate_view_height"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:background="@drawable/divider"
                 />
 
             <android.support.v7.widget.RecyclerView

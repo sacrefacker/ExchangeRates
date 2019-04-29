@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 
 import com.maloshpal.exchangerates.R
+import com.maloshpal.exchangerates.ui.util.MoneyUtils
 import com.maloshpal.exchangerates.ui.util.ViewUtils
 
 import org.androidannotations.annotations.EViewGroup
@@ -55,7 +56,7 @@ open class ExchangeRateListItemView : LinearLayout {
     }
 
     fun setMoneyAmount(moneyAmount: Long) {
-        this.amountText.text = moneyAmount.toString()
+        this.amountText.text = MoneyUtils.convertToString(this.context, moneyAmount)
     }
 
 // MARK: - Companion

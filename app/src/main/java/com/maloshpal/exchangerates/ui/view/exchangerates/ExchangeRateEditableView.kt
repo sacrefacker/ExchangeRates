@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 
 import com.maloshpal.exchangerates.R
+import com.maloshpal.exchangerates.ui.util.MoneyUtils
 import org.androidannotations.annotations.AfterViews
 
 import org.androidannotations.annotations.EViewGroup
@@ -24,6 +25,8 @@ open class ExchangeRateEditableView : LinearLayout {
 // MARK: - Properties
 
     var amountChangeListener: IMoneyAmountEditListener? = null
+
+    private var textWatcher = ExchangeRateTextWatcher()
 
     @ViewById(R.id.label_exchange_rate_name)
     internal lateinit var nameText: TextView
@@ -58,26 +61,7 @@ open class ExchangeRateEditableView : LinearLayout {
 
     @AfterViews
     fun onInit() {
-        this.amountText.addTextChangedListener(object : TextWatcher{
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                this@ExchangeRateEditableView.amountChangeListener?.onStartChangingAmount()
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                try {
-                    val amount: Long = requireNotNull(p0?.toString()?.toLong()) { "Unexpected null in string to long conversion" }
-                    this@ExchangeRateEditableView.amountChangeListener?.onAmountChanged(amount)
-                }
-                catch (ex: NumberFormatException) {
-                    Log.w(TAG, "Cannot parse amount from user's input")
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                // do nothing
-            }
-        })
+        this.amountText.addTextChangedListener(this.textWatcher)
     }
 
     fun setName(name: String) {
@@ -85,7 +69,9 @@ open class ExchangeRateEditableView : LinearLayout {
     }
 
     fun setMoneyAmount(moneyAmount: Long) {
-        this.amountText.setText(moneyAmount.toString())
+        this.amountText.removeTextChangedListener(this.textWatcher)
+        this.amountText.setText(MoneyUtils.convertToString(this.context, moneyAmount))
+        this.amountText.addTextChangedListener(this.textWatcher)
     }
 
 // MARK: - Inner types
@@ -93,6 +79,28 @@ open class ExchangeRateEditableView : LinearLayout {
     interface IMoneyAmountEditListener {
         fun onStartChangingAmount()
         fun onAmountChanged(amount: Long)
+    }
+
+    private inner class ExchangeRateTextWatcher : TextWatcher {
+
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            this@ExchangeRateEditableView.amountChangeListener?.onStartChangingAmount()
+        }
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            try {
+                val stringRepresentation: String = requireNotNull(p0?.toString()) { "Unexpected null in string to long conversion" }
+                val moneyAmount = MoneyUtils.convertToAmount(stringRepresentation)
+                this@ExchangeRateEditableView.amountChangeListener?.onAmountChanged(moneyAmount)
+            }
+            catch (ex: NumberFormatException) {
+                Log.w(TAG, "Cannot parse amount from user's input")
+            }
+        }
+
+        override fun afterTextChanged(p0: Editable?) {
+            // do nothing
+        }
     }
 
 // MARK: - Companion

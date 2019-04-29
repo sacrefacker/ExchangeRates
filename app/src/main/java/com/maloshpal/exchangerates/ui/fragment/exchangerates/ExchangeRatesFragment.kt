@@ -10,6 +10,7 @@ import com.maloshpal.exchangerates.R
 import com.maloshpal.exchangerates.mvp.presenter.exchangerates.ExchangeRatesPresenter
 import com.maloshpal.exchangerates.mvp.view.exchangerates.ExchangeRateViewModel
 import com.maloshpal.exchangerates.mvp.view.exchangerates.IExchangeRatesView
+import com.maloshpal.exchangerates.ui.activity.base.BaseAppActivity
 import com.maloshpal.exchangerates.ui.fragment.base.BaseAppFragment
 import com.maloshpal.exchangerates.ui.view.decoration.DividerItemDecoration
 import com.maloshpal.exchangerates.ui.view.exchangerates.ExchangeRateEditableView
@@ -18,9 +19,13 @@ import org.androidannotations.annotations.EFragment
 import org.androidannotations.annotations.ViewById
 
 @EFragment(R.layout.layout_fragment_exchange_rates)
-open class ExchangeRatesFragment() : BaseAppFragment(), IExchangeRatesView {
+open class ExchangeRatesFragment : BaseAppFragment(), IExchangeRatesView,
+        BaseAppFragment.ActivityTitleProvider, BaseAppActivity.FragmentBackPressed {
 
 // MARK: - Properties
+
+    override val activityTitle: String
+        get() = getString(R.string.app_name)
 
     private lateinit var exchangeRatesAdapter: ExchangeRatesAdapter
 
@@ -31,7 +36,7 @@ open class ExchangeRatesFragment() : BaseAppFragment(), IExchangeRatesView {
     internal lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     @ViewById(R.id.widget_main_exchange_rate)
-    internal lateinit var mainExchangeRateView: ExchangeRateEditableView
+    internal lateinit var baseExchangeRateView: ExchangeRateEditableView
 
     @ViewById(R.id.recycler_exchange_rates)
     internal lateinit var exchangeRatesRecycler: RecyclerView
@@ -42,13 +47,15 @@ open class ExchangeRatesFragment() : BaseAppFragment(), IExchangeRatesView {
 // MARK: - Methods
 
     override fun onInitInterface() {
+        super.onInitInterface()
+
         this.swipeRefreshLayout.setOnRefreshListener { this.presenter.onForceRefresh() }
 
-        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         this.exchangeRatesRecycler.layoutManager = layoutManager
 
-        val dividerPadding = resources.getDimensionPixelSize(R.dimen.exchange_rate_view_padding)
-        val itemDecoration = DividerItemDecoration(activity)
+        val dividerPadding = resources.getDimensionPixelSize(R.dimen.common_padding)
+        val itemDecoration = DividerItemDecoration(this.activity, R.drawable.divider)
         itemDecoration.setLeftPaddingInPx(dividerPadding)
         this.exchangeRatesRecycler.addItemDecoration(itemDecoration)
 
@@ -57,7 +64,7 @@ open class ExchangeRatesFragment() : BaseAppFragment(), IExchangeRatesView {
             this@ExchangeRatesFragment.exchangeRatesRecycler.adapter = this
         }
 
-        this.mainExchangeRateView.amountChangeListener = object : ExchangeRateEditableView.IMoneyAmountEditListener {
+        this.baseExchangeRateView.amountChangeListener = object : ExchangeRateEditableView.IMoneyAmountEditListener {
 
             override fun onStartChangingAmount() {
                 this@ExchangeRatesFragment.presenter.onStartChangingAmount()
@@ -70,8 +77,8 @@ open class ExchangeRatesFragment() : BaseAppFragment(), IExchangeRatesView {
     }
 
     override fun showMainExchangeRate(mainRate: ExchangeRateViewModel) {
-        this.mainExchangeRateView.setName(mainRate.id)
-        this.mainExchangeRateView.setMoneyAmount(mainRate.amount)
+        this.baseExchangeRateView.setName(mainRate.id)
+        this.baseExchangeRateView.setMoneyAmount(mainRate.amount)
     }
 
     override fun showExchangeRates(rates: List<ExchangeRateViewModel>) {
@@ -88,5 +95,10 @@ open class ExchangeRatesFragment() : BaseAppFragment(), IExchangeRatesView {
 
     override fun showProgress(show: Boolean) {
         this.progressView.visibility = if (show) View.VISIBLE else View.GONE
+    }
+
+    override fun onBackPressed(): Boolean {
+        showFinishActivityDialog()
+        return true
     }
 }

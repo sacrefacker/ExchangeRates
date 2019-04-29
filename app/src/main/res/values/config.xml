@@ -1,0 +1,3 @@
+<resources>
+    <string name="config_default_app_endpoint" translatable="false">https://revolut.duckdns.org</string>
+</resources>

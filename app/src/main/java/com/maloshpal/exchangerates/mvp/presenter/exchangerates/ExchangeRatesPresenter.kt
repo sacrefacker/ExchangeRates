@@ -5,11 +5,11 @@ import com.arellomobile.mvp.InjectViewState
 import javax.inject.Inject
 
 import com.maloshpal.exchangerates.app.InjectionHolder
-import com.maloshpal.exchangerates.mvp.model.ExchangeRateListModel
+import com.maloshpal.exchangerates.mvp.model.exchangerates.ExchangeRateListModel
 import com.maloshpal.exchangerates.mvp.presenter.base.BasePresenter
 import com.maloshpal.exchangerates.mvp.view.exchangerates.IExchangeRatesView
 import com.maloshpal.exchangerates.mvp.view.exchangerates.ExchangeRateViewModel
-import com.maloshpal.exchangerates.mvp.model.IExchangeRatesManager
+import com.maloshpal.exchangerates.mvp.model.exchangerates.IExchangeRatesManager
 import com.maloshpal.exchangerates.mvp.model.base.IManagerCallback
 import com.maloshpal.exchangerates.mvp.presenter.base.ScheduledFetcher
 import java.util.concurrent.Executors
@@ -21,7 +21,8 @@ class ExchangeRatesPresenter : BasePresenter<IExchangeRatesView>() {
 
     private var isInEditState: Boolean = false
 
-    private var mainExchangeRate: ExchangeRateViewModel? = null
+    private var baseCurrency: String? = null
+    private var baseCurrencyAmount: Long = DEFAULT_BASE_CURRENCY_AMOUNT
 
     private var latestExchangeRateList: ExchangeRateListModel? = null
 
@@ -29,7 +30,7 @@ class ExchangeRatesPresenter : BasePresenter<IExchangeRatesView>() {
     internal lateinit var ratesManager: IExchangeRatesManager
 
     private var schedulerFetcher: ScheduledFetcher<ExchangeRateListModel>? = null
-    private var exetutorService = Executors.newSingleThreadScheduledExecutor()
+    private var executorService = Executors.newSingleThreadScheduledExecutor()
 
 // MARK: - Construction
 
@@ -43,9 +44,11 @@ class ExchangeRatesPresenter : BasePresenter<IExchangeRatesView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
+        this.viewState.showProgress(true)
+
         this.schedulerFetcher = ScheduledFetcher(
-                this.exetutorService,
-                FETCH_SCHEDULE_INTERVAL_MILLIS,
+                this.executorService,
+                FETCH_SCHEDULE_INTERVAL_SECONDS,
                 ExchangeRatesCallback())
     }
 
@@ -66,10 +69,12 @@ class ExchangeRatesPresenter : BasePresenter<IExchangeRatesView>() {
     }
 
     fun onExchangeRateSelected(rate: ExchangeRateViewModel) {
-        this.mainExchangeRate = rate
+        this.baseCurrency = rate.id
+        this.baseCurrencyAmount = rate.amount
         this.viewState.showMainExchangeRate(rate)
 
-        val latestExchangeRates = requireNotNull(this.latestExchangeRateList) { "Attempt selecting main rate on empty exchange rate list" }
+        val latestExchangeRates = requireNotNull(this.latestExchangeRateList,
+                { "Attempt selecting main currency on empty exchange rate list" } )
         applyLatestExchangeRates(latestExchangeRates)
     }
 
@@ -79,12 +84,10 @@ class ExchangeRatesPresenter : BasePresenter<IExchangeRatesView>() {
 
     fun onAmountChanged(amount: Long) {
         this.isInEditState = false
-        val oldMainExchangeRate = requireNotNull(this.mainExchangeRate) { "Attempt changing amount on empty exchange rate" }
-        val newMainExchangeRate = ExchangeRateViewModel(oldMainExchangeRate.id, amount)
-        this.mainExchangeRate = newMainExchangeRate
-        this.viewState.showMainExchangeRate(newMainExchangeRate)
+        this.baseCurrencyAmount = amount
 
-        val latestExchangeRates = requireNotNull(this.latestExchangeRateList) { "Attempt selecting main rate on empty exchange rate list" }
+        val latestExchangeRates = requireNotNull(this.latestExchangeRateList,
+                { "Attempt selecting main rate on empty exchange rate list" } )
         applyLatestExchangeRates(latestExchangeRates)
     }
 
@@ -101,19 +104,17 @@ class ExchangeRatesPresenter : BasePresenter<IExchangeRatesView>() {
     }
 
     private fun requestExchangeRates(callback: IManagerCallback<ExchangeRateListModel>) {
-        this.ratesManager.requestExchangeRates(callback)
+        this.ratesManager.requestExchangeRates(this.baseCurrency, callback)
     }
 
     private fun applyLatestExchangeRates(rateList: ExchangeRateListModel) {
         this.latestExchangeRateList = rateList
         if (!this.isInEditState) {
-            val mainExchangeRate = requireNotNull(this.mainExchangeRate) { "Attempt changing amount on empty exchange rate" }
-            val mainExchangeRateMultiplier = rateList.rates.first { it.id == mainExchangeRate.id }.multiplier
+            val baseAmount = this@ExchangeRatesPresenter.baseCurrencyAmount
             val rateViewModels = rateList.rates
-                    .filter { it.id != mainExchangeRate.id }
                     .map {
-                        val rateAmount = mainExchangeRate.amount * it.multiplier / mainExchangeRateMultiplier
-                        ExchangeRateViewModel(it.id, rateAmount)
+                        val currencyAmount = baseAmount * it.value
+                        ExchangeRateViewModel(it.key, Math.round(currencyAmount))
                     }
             this.viewState.showExchangeRates(rateViewModels)
         }
@@ -124,15 +125,17 @@ class ExchangeRatesPresenter : BasePresenter<IExchangeRatesView>() {
     private inner class ExchangeRatesCallback : IManagerCallback<ExchangeRateListModel> {
 
         override fun handleResponse(response: ExchangeRateListModel) {
-            if (this@ExchangeRatesPresenter.mainExchangeRate == null) {
-                val firstExchangeRateInList = ExchangeRateViewModel(response.rates[0].id, 1)
-                this@ExchangeRatesPresenter.mainExchangeRate = firstExchangeRateInList
-                this@ExchangeRatesPresenter.viewState.showMainExchangeRate(firstExchangeRateInList)
+            if (this@ExchangeRatesPresenter.baseCurrency == null) {
+                this@ExchangeRatesPresenter.baseCurrency = response.base
+                val baseExchangeRate = ExchangeRateViewModel(response.base, this@ExchangeRatesPresenter.baseCurrencyAmount)
+                this@ExchangeRatesPresenter.viewState.showMainExchangeRate(baseExchangeRate)
             }
+            this@ExchangeRatesPresenter.viewState.showProgress(false)
             applyLatestExchangeRates(response)
         }
 
         override fun handleError() {
+            this@ExchangeRatesPresenter.viewState.showProgress(false)
             stopFetchingExchangeRates()
             this@ExchangeRatesPresenter.viewState.showLoadingError()
         }
@@ -141,6 +144,9 @@ class ExchangeRatesPresenter : BasePresenter<IExchangeRatesView>() {
 // MARK: - Companion
 
     companion object {
-        private const val FETCH_SCHEDULE_INTERVAL_MILLIS = 1000L
+
+        private const val FETCH_SCHEDULE_INTERVAL_SECONDS = 1L
+
+        private const val DEFAULT_BASE_CURRENCY_AMOUNT = 100L
     }
 }

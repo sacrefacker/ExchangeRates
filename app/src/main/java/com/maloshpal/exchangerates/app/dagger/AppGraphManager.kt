@@ -2,6 +2,11 @@ package com.maloshpal.exchangerates.app.dagger
 
 import android.annotation.SuppressLint
 import android.content.Context
+import com.maloshpal.exchangerates.app.InjectionHolder
+import com.maloshpal.exchangerates.app.dagger.components.DaggerBootstrapComponent
+import com.maloshpal.exchangerates.app.dagger.modules.ApiModule
+import com.maloshpal.exchangerates.app.dagger.modules.BootstrapModule
+import com.maloshpal.exchangerates.app.dagger.modules.ManagerModule
 
 interface IAppGraphManager {
     fun initBootstrapGraph()
@@ -19,12 +24,13 @@ class AppGraphManager private constructor(
 
     override fun initBootstrapGraph() {
 
-//        val bootstrapComponent = DaggerBootstrapComponent.builder()
-//                .bootstrapModule(BootstrapModule(appContext)
-//                .managerModule(ManagerModule())
-//                .build()
-//
-//        InjectionHolder.instance().bootstrapComponent = bootstrapComponent
+        val bootstrapComponent = DaggerBootstrapComponent.builder()
+                .bootstrapModule(BootstrapModule(appContext, this))
+                .apiModule(ApiModule())
+                .managerModule(ManagerModule())
+                .build()
+
+        InjectionHolder.instance().bootstrapComponent = bootstrapComponent
     }
 
 // MARK: - Companion

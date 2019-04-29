@@ -9,11 +9,23 @@ import org.androidannotations.annotations.AfterViews
 import org.androidannotations.annotations.EFragment
 
 @EFragment
-open class BaseAppFragment : BaseMvpFragment()
-{
+open class BaseAppFragment : BaseMvpFragment() {
+
+// MARK: - Methods
+
     @AfterViews
     protected open fun onInitInterface() {
         // Do not remove - needed for correct generation of Fragment_ with OnViewChangedListener interface
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        // Handling ActionBar title with the fragment back stack?
+        // @link http://stackoverflow.com/a/24674527
+        if (this is ActivityTitleProvider) {
+            getBaseActivity()?.title = this.activityTitle
+        }
     }
 
     fun showFinishActivityDialog(onCancel: (() -> Unit)? = null) {
@@ -46,6 +58,21 @@ open class BaseAppFragment : BaseMvpFragment()
         val appActivity = this.activity as BaseAppActivity
         return appActivity.dialogFragmentManager
     }
+
+// MARK: - Private methods
+
+    private fun getBaseActivity(): BaseAppActivity? {
+        val activity = this.activity
+        return if (activity is BaseAppActivity) activity else null
+    }
+
+// MARK: - Inner types
+
+    interface ActivityTitleProvider {
+        val activityTitle: String
+    }
+
+// MARK: - Companion
 
     companion object {
         internal inline fun <reified T: BaseAppFragment> newInstance(context: Context): T {

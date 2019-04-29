@@ -26,7 +26,7 @@
         style="@style/TextAppearance.AppTheme.Body2"
         android:layout_width="72dp"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         tools:text="46"
         />
 
