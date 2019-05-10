@@ -1,12 +1,15 @@
-package com.maloshpal.exchangerates.mvp.model.exchangerates;
+package com.maloshpal.exchangerates.datasource.network.exchangerates;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.maloshpal.exchangerates.mvp.model.base.BaseModel;
+import com.maloshpal.exchangerates.mvp.model.exchangerates.IExchangeRateListModel;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class ExchangeRateListModel extends BaseModel {
+// FIXME clean implementation
+public class ExchangeRateListNetworkModel implements IExchangeRateListModel {
 
 // MARK: - Fields
 
@@ -24,7 +27,7 @@ public class ExchangeRateListModel extends BaseModel {
 
 // MARK: - Construction
 
-    public ExchangeRateListModel(String base, String date, Map<String, Double> rates) {
+    public ExchangeRateListNetworkModel(String base, String date, Map<String, Double> rates) {
         this.base = base;
         this.date = date;
         this.rates = rates;
@@ -32,7 +35,8 @@ public class ExchangeRateListModel extends BaseModel {
 
 // MARK: - Getters and setters
 
-    public String getBase() {
+    @Override
+    public @NotNull String getBase() {
         return base;
     }
 
@@ -40,7 +44,8 @@ public class ExchangeRateListModel extends BaseModel {
         this.base = base;
     }
 
-    public String getDate() {
+    @Override
+    public @NotNull String getDate() {
         return date;
     }
 
@@ -48,7 +53,8 @@ public class ExchangeRateListModel extends BaseModel {
         this.date = date;
     }
 
-    public Map<String, Double> getRates() {
+    @Override
+    public @NotNull Map<String, Double> getRates() {
         return rates;
     }
 

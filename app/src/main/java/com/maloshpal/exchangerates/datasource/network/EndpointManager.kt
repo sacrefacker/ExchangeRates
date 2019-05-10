@@ -1,4 +1,4 @@
-package com.maloshpal.exchangerates.app.manager
+package com.maloshpal.exchangerates.datasource.network
 
 import com.maloshpal.exchangerates.R
 import com.maloshpal.exchangerates.app.ApplicationImpl

@@ -7,6 +7,7 @@ import com.maloshpal.exchangerates.app.dagger.components.DaggerBootstrapComponen
 import com.maloshpal.exchangerates.app.dagger.modules.ApiModule
 import com.maloshpal.exchangerates.app.dagger.modules.BootstrapModule
 import com.maloshpal.exchangerates.app.dagger.modules.ManagerModule
+import com.maloshpal.exchangerates.manager.AppExecutors
 
 interface IAppGraphManager {
     fun initBootstrapGraph()
@@ -27,7 +28,7 @@ class AppGraphManager private constructor(
         val bootstrapComponent = DaggerBootstrapComponent.builder()
                 .bootstrapModule(BootstrapModule(appContext, this))
                 .apiModule(ApiModule())
-                .managerModule(ManagerModule())
+                .managerModule(ManagerModule(AppExecutors()))
                 .build()
 
         InjectionHolder.instance().bootstrapComponent = bootstrapComponent

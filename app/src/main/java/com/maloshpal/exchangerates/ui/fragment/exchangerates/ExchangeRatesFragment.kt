@@ -94,6 +94,7 @@ open class ExchangeRatesFragment : BaseAppFragment(), IExchangeRatesView,
     }
 
     override fun showProgress(show: Boolean) {
+        this.swipeRefreshLayout.isRefreshing = false
         this.progressView.visibility = if (show) View.VISIBLE else View.GONE
     }
 

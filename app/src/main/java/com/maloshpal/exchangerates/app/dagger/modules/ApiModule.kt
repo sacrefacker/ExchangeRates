@@ -4,9 +4,9 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.maloshpal.exchangerates.app.dagger.scopes.BootScope
-import com.maloshpal.exchangerates.app.manager.ApiService
-import com.maloshpal.exchangerates.app.manager.EndpointManager
-import com.maloshpal.exchangerates.app.manager.IEndpointManager
+import com.maloshpal.exchangerates.datasource.network.ApiService
+import com.maloshpal.exchangerates.datasource.network.EndpointManager
+import com.maloshpal.exchangerates.datasource.network.IEndpointManager
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

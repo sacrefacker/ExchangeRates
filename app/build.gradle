@@ -41,17 +41,20 @@ dependencies {
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
+    final KOTLIN_COROUTINES_VERSION = rootProject.ext.KOTLIN_COROUTINES_VERSION
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$KOTLIN_COROUTINES_VERSION"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$KOTLIN_COROUTINES_VERSION"
 
     // Android Annotations
     final ANDROID_ANNOTATIONS_VERSION = rootProject.ext.ANDROID_ANNOTATIONS_VERSION
-    implementation "com.android.support:support-v4:28.0.0"
-    implementation "com.android.support:recyclerview-v7:28.0.0"
     kapt "org.androidannotations:androidannotations:$ANDROID_ANNOTATIONS_VERSION"
     implementation "org.androidannotations:androidannotations-api:$ANDROID_ANNOTATIONS_VERSION"
 
     // Android Support
     // "compile" instead of "implementation" to allow proper compilation of app module
     final ANDROID_SUPPORT_VERSION = rootProject.ext.ANDROID_SUPPORT_VERSION
+    implementation "com.android.support:support-v4:$ANDROID_SUPPORT_VERSION"
+    implementation "com.android.support:recyclerview-v7:$ANDROID_SUPPORT_VERSION"
     implementation "com.android.support:appcompat-v7:$ANDROID_SUPPORT_VERSION"
     implementation "com.android.support:design:$ANDROID_SUPPORT_VERSION"
     implementation "com.android.support:recyclerview-v7:$ANDROID_SUPPORT_VERSION"
@@ -79,9 +82,18 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
 
     // Network
-    implementation "com.squareup.retrofit2:retrofit:2.3.0"
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    implementation "com.squareup.retrofit2:converter-gson:2.3.0"
+    final RETROFIT_VERSION = rootProject.ext.RETROFIT_VERSION
+    implementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+
+//    // Room
+//    final ROOM_VERSION = rootProject.ext.ROOM_VERSION
+//    implementation "androidx.room:room-runtime:$ROOM_VERSION"
+//    implementation "androidx.room:room-runtime:$ROOM_VERSION"
+//    implementation "androidx.room:room-rxjava2:$ROOM_VERSION"
+
+    // External dependencies
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
 
     // testImplementation 'junit:junit:4.12'

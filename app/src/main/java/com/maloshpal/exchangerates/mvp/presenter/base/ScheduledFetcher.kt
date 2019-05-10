@@ -1,13 +1,14 @@
 package com.maloshpal.exchangerates.mvp.presenter.base
 
-import com.maloshpal.exchangerates.mvp.model.base.BaseModel
+import com.maloshpal.exchangerates.mvp.model.base.IBaseModel
 import com.maloshpal.exchangerates.mvp.model.base.IManagerCallback
 
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
-class ScheduledFetcher<T : BaseModel>(
+@Deprecated("Unused")
+class ScheduledFetcher<T : IBaseModel>(
         private val scheduledExecutorService: ScheduledExecutorService,
         private val delaySeconds: Long,
         private val callback: IManagerCallback<T>

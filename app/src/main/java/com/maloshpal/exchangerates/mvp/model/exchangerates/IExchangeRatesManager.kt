@@ -5,5 +5,6 @@ import com.maloshpal.exchangerates.mvp.model.base.IManagerCallback
 
 interface IExchangeRatesManager : IBaseManager {
 
-    fun requestExchangeRates(baseCurrency: String?, callback: IManagerCallback<ExchangeRateListModel>)
+    fun getExchangeRates(baseCurrency: String?, callback: IManagerCallback<IExchangeRateListModel>)
+    fun refreshExchangeRates(baseCurrency: String?, callback: IManagerCallback<IExchangeRateListModel>)
 }
